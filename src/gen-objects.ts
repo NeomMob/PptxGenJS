@@ -31,6 +31,7 @@ import {
 	IOptsChartData,
 	ISlideObject,
 	ImageProps,
+	MathProps,
 	MediaProps,
 	ObjectOptions,
 	OptsChartGridLine,
@@ -45,6 +46,7 @@ import {
 	TableRow,
 	TextProps,
 	TextPropsOptions,
+	PositionProps,
 } from './core-interfaces'
 import { getSlidesForTableRows } from './gen-tables'
 import { encodeXmlEntities, getNewRelId, getSmartParseNumber, inch2Emu, valToPts } from './gen-utils'
@@ -363,6 +365,44 @@ export function addChartDefinition (target: PresSlide, type: CHART_NAME | IChart
 
 	target._slideObjects.push(resultObject)
 	return resultObject
+}
+
+export function addMathDefinition (target: PresSlide, opt: MathProps): void {
+	const newObject: ISlideObject = {
+		_type: null,
+		text: null,
+		options: null,
+		image: null,
+		imageRid: null,
+		hyperlink: null,
+		math: null
+	}
+	const intPosX = opt.x || 0
+	const intPosY = opt.y || 0
+	const intWidth = opt.w || 0
+	const intHeight = opt.h || 0
+
+	const strMath = opt.math || ''
+
+	// REALITY-CHECK:
+	if (!strMath) {
+		console.error('ERROR: addMath() requires \'math\' parameter!')
+		return null
+	}
+
+	// STEP 2: Set type/path
+	newObject._type = SLIDE_OBJECT_TYPES.math
+
+	newObject.options = {
+		x: intPosX || 0,
+		y: intPosY || 0,
+		w: intWidth || 1,
+		h: intHeight || 1,
+	}
+	newObject.math = strMath
+
+	// STEP 6: Add object to slide
+	target._slideObjects.push(newObject)
 }
 
 /**

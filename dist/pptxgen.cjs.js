@@ -1,4 +1,4 @@
-/* PptxGenJS 3.12.0-beta @ 2023-01-16T23:23:48.956Z */
+/* PptxGenJS 3.12.0-beta @ 2023-01-17T13:34:19.670Z */
 'use strict';
 
 var JSZip = require('jszip');
@@ -635,6 +635,7 @@ var SLIDE_OBJECT_TYPES;
     SLIDE_OBJECT_TYPES["tablecell"] = "tablecell";
     SLIDE_OBJECT_TYPES["text"] = "text";
     SLIDE_OBJECT_TYPES["notes"] = "notes";
+    SLIDE_OBJECT_TYPES["math"] = "math";
 })(SLIDE_OBJECT_TYPES || (SLIDE_OBJECT_TYPES = {}));
 var PLACEHOLDER_TYPES;
 (function (PLACEHOLDER_TYPES) {
@@ -2122,6 +2123,11 @@ function slideObjectToXml(slide) {
                 strSlideXml += '</p:spPr>';
                 strSlideXml += '</p:pic>';
                 break;
+            case SLIDE_OBJECT_TYPES.math:
+                strSlideXml += '<m:oMath xmlns:mml="http://www.w3.org/1998/Math/MathML">';
+                strSlideXml += '<m:r><m:t>f(x)=3</m:t></m:r>';
+                strSlideXml += '</m:oMath>';
+                break;
             case SLIDE_OBJECT_TYPES.media:
                 if (slideItemObj.mtype === 'online') {
                     strSlideXml += '<p:pic>';
@@ -3588,6 +3594,38 @@ function addChartDefinition(target, type, data, opt) {
     target._slideObjects.push(resultObject);
     return resultObject;
 }
+function addMathDefinition(target, opt) {
+    var newObject = {
+        _type: null,
+        text: null,
+        options: null,
+        image: null,
+        imageRid: null,
+        hyperlink: null,
+        math: null
+    };
+    var intPosX = opt.x || 0;
+    var intPosY = opt.y || 0;
+    var intWidth = opt.w || 0;
+    var intHeight = opt.h || 0;
+    var strMath = opt.math || '';
+    // REALITY-CHECK:
+    if (!strMath) {
+        console.error('ERROR: addMath() requires \'math\' parameter!');
+        return null;
+    }
+    // STEP 2: Set type/path
+    newObject._type = SLIDE_OBJECT_TYPES.math;
+    newObject.options = {
+        x: intPosX || 0,
+        y: intPosY || 0,
+        w: intWidth || 1,
+        h: intHeight || 1,
+    };
+    newObject.math = strMath;
+    // STEP 6: Add object to slide
+    target._slideObjects.push(newObject);
+}
 /**
  * Adds an image object to a slide definition.
  * This method can be called with only two args (opt, target) - this is supposed to be the only way in future.
@@ -4494,6 +4532,15 @@ var Slide = /** @class */ (function () {
         var optionsWithType = options || {};
         optionsWithType._type = type;
         addChartDefinition(this, type, data, options);
+        return this;
+    };
+    /**
+     * Add math to Slide
+     * @param {ImageProps} options - image options
+     * @return {Slide} this Slide
+     */
+    Slide.prototype.addMath = function (options) {
+        addMathDefinition(this, options);
         return this;
     };
     /**

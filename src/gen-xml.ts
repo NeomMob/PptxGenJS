@@ -615,6 +615,12 @@ function slideObjectToXml (slide: PresSlide | SlideLayout): string {
 				strSlideXml += '</p:pic>'
 				break
 
+			case SLIDE_OBJECT_TYPES.math:
+				strSlideXml += '<m:oMath xmlns:mml="http://www.w3.org/1998/Math/MathML">'
+				strSlideXml += ` <p:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${cx}" cy="${cy}"/></p:xfrm>`
+				strSlideXml += '<m:r><m:t>f(x)=3</m:t></m:r>'
+				strSlideXml += '</m:oMath>'
+				break
 			case SLIDE_OBJECT_TYPES.media:
 				if (slideItemObj.mtype === 'online') {
 					strSlideXml += '<p:pic>'

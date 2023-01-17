@@ -16,6 +16,7 @@ import {
 	ISlideRelChart,
 	ISlideRelMedia,
 	ImageProps,
+	MathProps,
 	MediaProps,
 	PresLayout,
 	PresSlide,
@@ -26,6 +27,7 @@ import {
 	TableRow,
 	TextProps,
 	TextPropsOptions,
+	PositionProps,
 } from './core-interfaces'
 import * as genObj from './gen-objects'
 
@@ -165,6 +167,16 @@ export default class Slide {
 		const optionsWithType: IChartOptsLib = options || {}
 		optionsWithType._type = type
 		genObj.addChartDefinition(this, type, data, options)
+		return this
+	}
+
+	/**
+	 * Add math to Slide
+	 * @param {ImageProps} options - image options
+	 * @return {Slide} this Slide
+	 */
+	addMath (options: MathProps): Slide {
+		genObj.addMathDefinition(this, options)
 		return this
 	}
 

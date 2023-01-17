@@ -445,6 +445,14 @@ export interface ObjectNameProps {
 	 */
 	objectName?: string
 }
+// math
+export interface MathProps extends PositionProps {
+	/**
+	 * Alt Text value ("How would you describe this object and its contents to someone who is blind?")
+	 * - PowerPoint: [right-click on an image] > "Edit Alt Text..."
+	 */
+	math?: string
+}
 
 // image / media ==================================================================================
 export type MediaType = 'audio' | 'online' | 'video'
@@ -1626,6 +1634,8 @@ export interface ISlideObject {
 	mtype?: MediaType
 	mediaRid?: number
 	shape?: SHAPE_NAME
+	// math
+	math?: string
 }
 // PRIVATE ^^^
 
