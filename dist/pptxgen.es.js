@@ -1,4 +1,4 @@
-/* PptxGenJS 3.12.0-beta @ 2023-01-17T13:34:19.674Z */
+/* PptxGenJS 3.12.0-beta @ 2023-03-07T14:35:43.895Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -2118,9 +2118,44 @@ function slideObjectToXml(slide) {
                 strSlideXml += '</p:pic>';
                 break;
             case SLIDE_OBJECT_TYPES.math:
-                strSlideXml += '<m:oMath xmlns:mml="http://www.w3.org/1998/Math/MathML">';
-                strSlideXml += '<m:r><m:t>f(x)=3</m:t></m:r>';
+                strSlideXml += '<mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">';
+                strSlideXml += '<mc:Choice xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" Requires="a14">';
+                strSlideXml += '	<p:sp>';
+                strSlideXml += '		<p:nvSpPr>';
+                strSlideXml += '			<p:cNvPr id="4" name="">';
+                strSlideXml += '			</p:cNvPr>';
+                strSlideXml += '			<p:cNvSpPr txBox="1"/>';
+                strSlideXml += '			<p:nvPr/>';
+                strSlideXml += '		</p:nvSpPr>';
+                strSlideXml += '		<p:spPr>';
+                strSlideXml += " <a:xfrm><a:off x=\"".concat(x, "\" y=\"").concat(y, "\"/><a:ext cx=\"").concat(cx, "\" cy=\"").concat(cy, "\"/></a:xfrm>");
+                strSlideXml += '			<a:prstGeom prst="rect">';
+                strSlideXml += '				<a:avLst/>';
+                strSlideXml += '			</a:prstGeom>';
+                strSlideXml += '			<a:noFill/>';
+                strSlideXml += '		</p:spPr>';
+                strSlideXml += '		<p:txBody>';
+                strSlideXml += '			<a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" rtlCol="0">';
+                strSlideXml += '				<a:spAutoFit/>';
+                strSlideXml += '			</a:bodyPr>';
+                strSlideXml += '			<a:p>';
+                strSlideXml += '				<a:pPr/>';
+                strSlideXml += '				<a14:m>';
+                strSlideXml += '					<m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">';
+                strSlideXml += '						<m:oMathParaPr>';
+                strSlideXml += '							<m:jc m:val="centerGroup"/>';
+                strSlideXml += '						</m:oMathParaPr>';
+                strSlideXml += '<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">';
+                strSlideXml += slideItemObj.math;
                 strSlideXml += '</m:oMath>';
+                strSlideXml += '</m:oMathPara>';
+                strSlideXml += '</a14:m>';
+                strSlideXml += '<a:endParaRPr lang="en-GB" dirty="0"/>';
+                strSlideXml += '</a:p>';
+                strSlideXml += '</p:txBody>';
+                strSlideXml += '</p:sp>';
+                strSlideXml += '</mc:Choice>';
+                strSlideXml += '</mc:AlternateContent>';
                 break;
             case SLIDE_OBJECT_TYPES.media:
                 if (slideItemObj.mtype === 'online') {
